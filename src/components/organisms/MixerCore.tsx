@@ -18,9 +18,9 @@ interface MixerCoreProps {
 
 export const MixerCore = ({ channels, onChannelChange, topControl }: MixerCoreProps) => {
   return (
-    <div className="flex flex-col items-center  md:gap-8 w-full">
+    <div className="flex flex-col items-center gap-6 md:gap-8 w-full">
       {/* Large Play Control */}
-      <Button variant="inset" size="masterPlayContainer" className="group rounded-full flex items-center justify-center p-3 md:p-4">
+      <Button variant="inset" size="masterPlayContainer" className="group rounded-full flex items-center justify-center p-2 md:p-4">
         <div className="w-full h-full rounded-full bg-neo-surface neo-shadow flex items-center justify-center group-hover:text-primary transition-colors duration-300">
           <Play size={48} fill="currentColor" strokeWidth={1} className="opacity-60 group-hover:opacity-100" />
         </div>
@@ -29,7 +29,7 @@ export const MixerCore = ({ channels, onChannelChange, topControl }: MixerCorePr
       {topControl}
 
       {/* Sound Channels */}
-      <div className="flex flex-wrap gap-6 md:gap-12 justify-center w-full mt-6 md:mt-12">
+      <div className="flex flex-wrap gap-8 sm:gap-12 justify-center w-full mt-6 lg:mt-12">
         {channels.map((channel) => (
           <ChannelItem
             key={channel.id}

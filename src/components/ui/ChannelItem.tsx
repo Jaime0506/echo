@@ -37,7 +37,7 @@ export const ChannelItem: React.FC<ChannelItemProps> = ({
   };
 
   return (
-    <div className={cn("flex flex-col items-center gap-4 w-24", className)}>
+    <div className={cn("flex flex-col items-center gap-3 md:gap-4 w-20 sm:w-24", className)}>
       <Button
         variant={isActive ? "active" : "default"}
         size="iconLg"
@@ -49,7 +49,7 @@ export const ChannelItem: React.FC<ChannelItemProps> = ({
         {renderIcon()}
       </Button>
       
-      <div className="h-48 flex items-center justify-center w-full py-2">
+      <div className="h-40 sm:h-48 flex items-center justify-center w-full py-2">
         <Slider
           orientation="vertical"
           value={[value]}
@@ -63,7 +63,7 @@ export const ChannelItem: React.FC<ChannelItemProps> = ({
       <Typography
         variant="label"
         color={isActive ? "accent" : "muted"}
-        className="mt-4 text-center"
+        className="mt-3 md:mt-4 text-center"
       >
         {label}
       </Typography>

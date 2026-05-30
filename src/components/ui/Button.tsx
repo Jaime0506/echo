@@ -21,9 +21,9 @@ const buttonVariants = tv({
       lg: "h-11 px-8",
       icon: "h-12 w-12",
       iconSm: "h-8 w-8",
-      iconLg: "h-16 w-16",
-      masterPlayContainer: "h-32 w-32 md:h-48 md:w-48",
-      masterPlayInner: "h-24 w-24 md:h-40 md:w-40",
+      iconLg: "h-14 w-14 lg:h-16 lg:w-16",
+      masterPlayContainer: "h-32 w-32 sm:h-40 sm:w-40 lg:h-48 lg:w-48",
+      masterPlayInner: "h-24 w-24 sm:h-32 sm:w-32 lg:h-40 lg:w-40",
     },
     loading: {
       true: "text-transparent relative pointer-events-none",

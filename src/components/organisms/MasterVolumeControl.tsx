@@ -8,7 +8,7 @@ interface MasterVolumeControlProps {
 
 export const MasterVolumeControl = ({ volume, onVolumeChange }: MasterVolumeControlProps) => {
   return (
-    <div className="w-1/2 flex flex-col gap-2 items-center justify-center lg:items-start px-4 lg:px-0">
+    <div className="w-1/4 md:w-1/3 lg:w-1/2 flex flex-col gap-2 md:gap-4 items-center justify-center px-2 md:px-4 lg:px-0 mt-2 md:mt-4">
       <Slider
         orientation="horizontal"
         value={[volume]}

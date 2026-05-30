@@ -4,7 +4,7 @@ import { Button } from "../ui/Button";
 
 export const TopAppBar = () => {
   return (
-    <header className="fixed top-0 w-full z-50 flex justify-between items-center px-6 md:px-12 h-20 md:h-24 pointer-events-none">
+    <header className="hidden lg:flex fixed top-0 w-full z-50 justify-between items-center px-6 md:px-12 h-20 md:h-24 pointer-events-none">
       <Typography variant="display" className="tracking-tighter opacity-80 pointer-events-auto">
         Echo
       </Typography>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MixerLayout } from "../templates/MixerLayout";
 import { TopAppBar } from "../organisms/TopAppBar";
 import { MixerCore, SoundChannel } from "../organisms/MixerCore";
@@ -12,6 +12,18 @@ export const MixerPage = () => {
   ]);
 
   const [masterVolume, setMasterVolume] = useState(33);
+
+  useEffect(() => {
+    const handleResize = () => {
+      console.log(`Window size: ${window.innerWidth}px x ${window.innerHeight}px`);
+    };
+    
+    // Log initial size
+    handleResize();
+    
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const updateChannelValue = (id: string, value: number) => {
     setChannels(prev => prev.map(c => c.id === id ? { ...c, value } : c));
