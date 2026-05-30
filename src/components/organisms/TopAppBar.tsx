@@ -26,18 +26,18 @@ export const TopAppBar = () => {
   }, [isDark]);
 
   return (
-    <header className="hidden lg:flex fixed top-0 w-full z-50 justify-between items-center px-6 md:px-12 h-20 md:h-24 pointer-events-none">
-      <Typography variant="display" className="tracking-tighter pointer-events-auto">
+    <header className="flex fixed top-10 w-full z-50 justify-between items-center px-6 md:px-12 h-20 md:h-24 pointer-events-none">
+      <Typography variant="display" className="flex tracking-tighter pointer-events-auto">
         Echo
       </Typography>
       <div className="flex items-center gap-4 pointer-events-auto">
         <Button variant="default" size="icon" className="text-on-surface-variant" onClick={() => setIsDark(!isDark)}>
           {isDark ? <Sun size={20} strokeWidth={1.5} /> : <Moon size={20} strokeWidth={1.5} />}
         </Button>
-        <Button variant="default" size="icon" className="text-on-surface-variant">
+        <Button variant="default" size="icon" className="hidden lg:flex text-on-surface-variant">
           <Bell size={20} strokeWidth={1.5} />
         </Button>
-        <Button variant="default" size="icon" className="text-on-surface-variant">
+        <Button variant="default" size="icon" className="hidden lg:flex text-on-surface-variant">
           <Settings size={20} strokeWidth={1.5} />
         </Button>
       </div>

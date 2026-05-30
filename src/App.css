@@ -145,8 +145,15 @@
     }
 
     body {
-        background-color: var(--color-neo-surface);
+        background-color: transparent;
         color: var(--color-on-surface-variant);
+        margin: 0;
+        padding: 0;
+    }
+
+    /* We ensure #root also is transparent to not block the corners */
+    #root {
+        background-color: transparent;
     }
 
     input[type=range] {

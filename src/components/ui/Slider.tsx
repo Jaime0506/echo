@@ -31,7 +31,7 @@ const trackVariants = tv({
 
 export interface SliderProps
   extends React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>,
-    VariantProps<typeof sliderVariants> {}
+  VariantProps<typeof sliderVariants> { }
 
 export const Slider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
@@ -44,10 +44,10 @@ export const Slider = React.forwardRef<
     {...props}
   >
     <SliderPrimitive.Track className={trackVariants({ orientation })}>
-      <SliderPrimitive.Range className="absolute bg-on-surface-variant/20 rounded-full" 
+      <SliderPrimitive.Range className="absolute bg-on-surface-variant/20 rounded-full"
         style={{
-          width: orientation === "horizontal" ? "100%" : "100%",
-          height: orientation === "vertical" ? "100%" : "100%"
+          width: "100%",
+          height: "100%"
         }}
       />
     </SliderPrimitive.Track>

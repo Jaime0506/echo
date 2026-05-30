@@ -1,6 +1,10 @@
 import { ReactNode } from "react";
 import { Surface } from "../ui/Surface";
 
+import { useEffect, useState } from "react";
+import { platform } from "@tauri-apps/plugin-os";
+import { cn } from "../../utils";
+
 interface MixerLayoutProps {
   topBar: ReactNode;
   centerContent: ReactNode;
@@ -9,8 +13,18 @@ interface MixerLayoutProps {
 }
 
 export const MixerLayout = ({ topBar, centerContent, rightPanel, leftPanel }: MixerLayoutProps) => {
+  const [isMac, setIsMac] = useState(true); // Default to true to prevent flash of square corners on mac
+
+  useEffect(() => {
+    setIsMac(platform() === "macos");
+  }, []);
+
   return (
-    <Surface className="h-screen w-screen flex flex-col font-body-md text-body-md overflow-hidden relative">
+    <div className={cn("h-screen w-screen overflow-hidden", isMac ? "p-0" : "p-0.5 bg-transparent")}>
+      <Surface className={cn(
+        "h-full w-full flex flex-col font-body-md text-body-md overflow-hidden relative bg-neo-surface",
+        !isMac && "rounded-2xl border border-on-surface-variant/20 shadow-xl"
+      )}>
       {topBar}
 
       {/* Bottom Metadata */}
@@ -36,7 +50,8 @@ export const MixerLayout = ({ topBar, centerContent, rightPanel, leftPanel }: Mi
           </div>
 
         </div>
-      </main>
-    </Surface>
+        </main>
+      </Surface>
+    </div>
   );
 };

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { MixerLayout } from "../templates/MixerLayout";
 import { TopAppBar } from "../organisms/TopAppBar";
+import { WindowBar } from "../organisms/WindowBar";
 import { MixerCore, SoundChannel } from "../organisms/MixerCore";
 import { MasterVolumeControl } from "../organisms/MasterVolumeControl";
 
@@ -19,7 +20,12 @@ export const MixerPage = () => {
 
   return (
     <MixerLayout
-      topBar={<TopAppBar />}
+      topBar={
+        <>
+          <WindowBar />
+          <TopAppBar />
+        </>
+      }
       centerContent={
         <MixerCore
           channels={channels}
