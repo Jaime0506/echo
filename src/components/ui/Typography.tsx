@@ -14,7 +14,7 @@ const typographyVariants = tv({
     },
     color: {
       default: "text-on-surface-variant",
-      muted: "text-on-surface-variant opacity-60",
+      muted: "text-on-surface-variant opacity-80",
       accent: "text-neo-accent",
     },
   },

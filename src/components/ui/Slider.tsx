@@ -51,7 +51,7 @@ export const Slider = React.forwardRef<
         }}
       />
     </SliderPrimitive.Track>
-    <SliderPrimitive.Thumb className="block h-6 w-6 rounded-full bg-neo-surface neo-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 transition-colors hover:bg-gray-50 cursor-pointer" />
+    <SliderPrimitive.Thumb className="block h-6 w-6 rounded-full bg-neo-surface border-[1.5px] border-on-surface-variant/20 dark:border-white/30 neo-shadow hover:neo-active-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50 transition-colors cursor-pointer" />
   </SliderPrimitive.Root>
 ));
 Slider.displayName = SliderPrimitive.Root.displayName;

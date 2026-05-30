@@ -137,6 +137,13 @@
 }
 
 @layer base {
+    .dark {
+        --color-neo-surface: #121212;
+        --color-neo-shadow-light: #242424;
+        --color-neo-shadow-dark: #050505;
+        --color-on-surface-variant: #FFFFFF;
+    }
+
     body {
         background-color: var(--color-neo-surface);
         color: var(--color-on-surface-variant);

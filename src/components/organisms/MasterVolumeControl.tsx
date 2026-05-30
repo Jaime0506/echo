@@ -15,7 +15,7 @@ export const MasterVolumeControl = ({ volume, onVolumeChange }: MasterVolumeCont
         onValueChange={(v) => onVolumeChange(v[0])}
         max={100}
       />
-      <Typography variant="mono" color="muted">
+      <Typography variant="mono" color="default">
         VOL {volume}%
       </Typography>
     </div>

@@ -43,7 +43,7 @@ export const ChannelItem: React.FC<ChannelItemProps> = ({
         size="iconLg"
         className={cn(
           "rounded-full",
-          !isActive && "text-on-surface-variant opacity-60"
+          !isActive && "text-on-surface-variant opacity-80"
         )}
       >
         {renderIcon()}

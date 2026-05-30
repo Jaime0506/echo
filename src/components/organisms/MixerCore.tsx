@@ -22,7 +22,7 @@ export const MixerCore = ({ channels, onChannelChange, topControl }: MixerCorePr
       {/* Large Play Control */}
       <Button variant="inset" size="masterPlayContainer" className="group rounded-full flex items-center justify-center p-2 md:p-4">
         <div className="w-full h-full rounded-full bg-neo-surface neo-shadow flex items-center justify-center group-hover:text-primary transition-colors duration-300">
-          <Play size={48} fill="currentColor" strokeWidth={1} className="opacity-60 group-hover:opacity-100" />
+          <Play size={48} fill="currentColor" strokeWidth={1} className="opacity-80 group-hover:opacity-100" />
         </div>
       </Button>
 
