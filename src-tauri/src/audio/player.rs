@@ -7,8 +7,14 @@ use std::thread;
 use tauri::{AppHandle, Manager};
 
 pub enum AudioCommand {
-    SetVolume { id: String, volume: f32, file_path: String },
-    SetMasterVolume { volume: f32 },
+    SetVolume {
+        id: String,
+        volume: f32,
+        file_path: String,
+    },
+    SetMasterVolume {
+        volume: f32,
+    },
 }
 
 pub struct AudioState {
@@ -27,14 +33,18 @@ impl AudioState {
                     return;
                 }
             };
-            
+
             // Store the sink and its individual channel volume
             let mut sinks: HashMap<String, (Sink, f32)> = HashMap::new();
             let mut master_volume: f32 = 1.0;
 
             for cmd in rx {
                 match cmd {
-                    AudioCommand::SetVolume { id, volume, file_path } => {
+                    AudioCommand::SetVolume {
+                        id,
+                        volume,
+                        file_path,
+                    } => {
                         if volume > 0.0 {
                             if let Some((sink, chan_vol)) = sinks.get_mut(&id) {
                                 *chan_vol = volume;

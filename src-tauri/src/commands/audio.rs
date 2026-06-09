@@ -12,6 +12,10 @@ pub async fn set_channel_volume(
 }
 
 #[tauri::command]
-pub async fn set_master_volume(volume: f32, app_handle: AppHandle, state: State<'_, AudioState>) -> Result<(), String> {
+pub async fn set_master_volume(
+    volume: f32,
+    app_handle: AppHandle,
+    state: State<'_, AudioState>,
+) -> Result<(), String> {
     state.set_master_volume(volume, &app_handle)
 }
