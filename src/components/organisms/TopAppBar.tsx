@@ -1,4 +1,4 @@
-import { Bell, Settings, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { Typography } from "../ui/Typography";
 import { Button } from "../ui/Button";
 import { useEffect, useState } from "react";
@@ -33,12 +33,6 @@ export const TopAppBar = () => {
       <div className="flex items-center gap-4 pointer-events-auto">
         <Button variant="default" size="icon" className="text-on-surface-variant" onClick={() => setIsDark(!isDark)}>
           {isDark ? <Sun size={20} strokeWidth={1.5} /> : <Moon size={20} strokeWidth={1.5} />}
-        </Button>
-        <Button variant="default" size="icon" className="hidden lg:flex text-on-surface-variant">
-          <Bell size={20} strokeWidth={1.5} />
-        </Button>
-        <Button variant="default" size="icon" className="hidden lg:flex text-on-surface-variant">
-          <Settings size={20} strokeWidth={1.5} />
         </Button>
       </div>
     </header>

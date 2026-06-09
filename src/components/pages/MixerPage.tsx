@@ -8,9 +8,9 @@ import { MasterVolumeControl } from "../organisms/MasterVolumeControl";
 
 export const MixerPage = () => {
   const [channels, setChannels] = useState<SoundChannel[]>([
-    { id: "rain", label: "Lluvia", icon: "rain", value: 20, active: false },
-    { id: "cafe", label: "Café", icon: "cafe", value: 75, active: true },
-    { id: "noise", label: "Ruido Blanco", icon: "noise", value: 40, active: false },
+    { id: "rain", label: "Lluvia", icon: "rain", value: 0, active: false },
+    { id: "cafe", label: "Café", icon: "cafe", value: 0, active: false },
+    { id: "noise", label: "Ruido Blanco", icon: "noise", value: 0, active: false },
   ]);
 
   const [masterVolume, setMasterVolume] = useState(0);
@@ -25,8 +25,14 @@ export const MixerPage = () => {
   }, []); // Run once on mount
 
   const updateChannelValue = (id: string, value: number) => {
-    setChannels(prev => prev.map(c => c.id === id ? { ...c, value } : c));
+    setChannels(prev => prev.map(channel => channel.id === id ? { ...channel, value, active: value > 0 } : channel));
     invoke("set_channel_volume", { id, volume: value / 100.0 }).catch(console.error);
+  };
+
+  const updateMasterVolume = (value: number) => {
+    console.log('Me llamaron', value)
+    setMasterVolume(value);
+    invoke("set_master_volume", { volume: value / 100.0 }).catch(console.error);
   };
 
   return (
@@ -44,7 +50,7 @@ export const MixerPage = () => {
           topControl={
             <MasterVolumeControl
               volume={masterVolume}
-              onVolumeChange={setMasterVolume}
+              onVolumeChange={updateMasterVolume}
             />
           }
         />

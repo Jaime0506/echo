@@ -32,7 +32,8 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             greet,
-            commands::audio::set_channel_volume
+            commands::audio::set_channel_volume,
+            commands::audio::set_master_volume
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

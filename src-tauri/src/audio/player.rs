@@ -8,6 +8,7 @@ use tauri::{AppHandle, Manager};
 
 pub enum AudioCommand {
     SetVolume { id: String, volume: f32, file_path: String },
+    SetMasterVolume { volume: f32 },
 }
 
 pub struct AudioState {
@@ -26,14 +27,18 @@ impl AudioState {
                     return;
                 }
             };
-            let mut sinks: HashMap<String, Sink> = HashMap::new();
+            
+            // Store the sink and its individual channel volume
+            let mut sinks: HashMap<String, (Sink, f32)> = HashMap::new();
+            let mut master_volume: f32 = 1.0;
 
             for cmd in rx {
                 match cmd {
                     AudioCommand::SetVolume { id, volume, file_path } => {
                         if volume > 0.0 {
-                            if let Some(sink) = sinks.get(&id) {
-                                sink.set_volume(volume);
+                            if let Some((sink, chan_vol)) = sinks.get_mut(&id) {
+                                *chan_vol = volume;
+                                sink.set_volume(volume * master_volume);
                                 if sink.is_paused() {
                                     sink.play();
                                 }
@@ -42,17 +47,25 @@ impl AudioState {
                                     if let Ok(file) = File::open(&file_path) {
                                         if let Ok(source) = Decoder::new(BufReader::new(file)) {
                                             sink.append(source.repeat_infinite());
-                                            sink.set_volume(volume);
+                                            sink.set_volume(volume * master_volume);
                                             sink.play();
-                                            sinks.insert(id, sink);
+                                            sinks.insert(id, (sink, volume));
                                         }
                                     }
                                 }
                             }
                         } else {
-                            if let Some(sink) = sinks.get(&id) {
+                            if let Some((sink, chan_vol)) = sinks.get_mut(&id) {
+                                *chan_vol = volume;
                                 sink.pause();
                             }
+                        }
+                    }
+                    AudioCommand::SetMasterVolume { volume } => {
+                        master_volume = volume;
+                        // Update all active sinks with the new master volume scaled
+                        for (sink, chan_vol) in sinks.values() {
+                            sink.set_volume(*chan_vol * master_volume);
                         }
                     }
                 }
@@ -77,6 +90,12 @@ impl AudioState {
                 volume,
                 file_path: resource_path,
             })
+            .map_err(|e| e.to_string())
+    }
+
+    pub fn set_master_volume(&self, volume: f32, _app_handle: &AppHandle) -> Result<(), String> {
+        self.tx
+            .send(AudioCommand::SetMasterVolume { volume })
             .map_err(|e| e.to_string())
     }
 
