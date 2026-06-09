@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { invoke } from "@tauri-apps/api/core";
 import { MixerLayout } from "../templates/MixerLayout";
 import { TopAppBar } from "../organisms/TopAppBar";
 import { WindowBar } from "../organisms/WindowBar";
@@ -14,8 +15,18 @@ export const MixerPage = () => {
 
   const [masterVolume, setMasterVolume] = useState(0);
 
+  // Sync initial state with backend if active
+  useEffect(() => {
+    channels.forEach((channel) => {
+      if (channel.active && channel.value > 0) {
+        invoke("set_channel_volume", { id: channel.id, volume: channel.value / 100.0 }).catch(console.error);
+      }
+    });
+  }, []); // Run once on mount
+
   const updateChannelValue = (id: string, value: number) => {
     setChannels(prev => prev.map(c => c.id === id ? { ...c, value } : c));
+    invoke("set_channel_volume", { id, volume: value / 100.0 }).catch(console.error);
   };
 
   return (

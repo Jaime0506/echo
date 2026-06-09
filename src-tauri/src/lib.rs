@@ -1,3 +1,8 @@
+mod audio;
+mod commands;
+
+use tauri::Manager;
+
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -8,9 +13,15 @@ fn greet(name: &str) -> String {
 pub fn run() {
     tauri::Builder::default()
         .setup(|app| {
+            // Initialize audio state
+            if let Ok(audio_state) = audio::player::AudioState::new() {
+                app.manage(audio_state);
+            } else {
+                eprintln!("Failed to initialize audio state");
+            }
+
             #[cfg(target_os = "windows")]
             {
-                use tauri::Manager;
                 if let Some(window) = app.get_webview_window("main") {
                     window.set_decorations(false).unwrap();
                 }
@@ -19,7 +30,10 @@ pub fn run() {
         })
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            commands::audio::set_channel_volume
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
