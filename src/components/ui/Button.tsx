@@ -13,7 +13,7 @@ const buttonVariants = tv({
       ghost: "bg-transparent text-on-surface-variant hover:bg-on-surface-variant/10",
       inset: "bg-neo-surface text-on-surface-variant neo-shadow-inset hover:opacity-80",
       // Specifically for the large central play button area
-      masterPlayInner: "bg-neo-surface text-on-surface-variant neo-shadow hover:text-primary transition-colors duration-300",
+      masterPlayInner: "bg-neo-surface text-on-surface-variant neo-shadow hover:text-neo-accent transition-colors duration-300",
     },
     size: {
       default: "h-10 px-4 py-2",
