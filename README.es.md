@@ -38,6 +38,13 @@ Echo aprovecha tecnologías web de última generación empaquetadas en un ejecut
 - **Frontend:** React 19
 - **Estilos y Animación:** Tailwind CSS v4, Framer Motion, Radix UI
 
+## 🎵 Créditos de Audio
+
+Los sonidos ambientales incluidos en Echo provienen de [Freesound.org](https://freesound.org) bajo licencias de Creative Commons:
+
+- **[Rain Loop Ontario](https://freesound.org/people/Ayton/sounds/212799/)** de [Ayton](https://freesound.org/people/Ayton/) – Licenciado bajo [Attribution 3.0](http://creativecommons.org/licenses/by/3.0/)
+- **[Storm Winds.aiff](https://freesound.org/people/gnrja/sounds/151770/)** de [gnrja](https://freesound.org/people/gnrja/) – Licenciado bajo [Attribution 4.0](https://creativecommons.org/licenses/by/4.0/)
+
 ## 📜 Licencia
 
 Echo es orgullosamente de Código Abierto. Se distribuye bajo la **Licencia GPL v2**, lo que garantiza que cualquier trabajo derivado también deberá mantenerse abierto y libre. Consulta el archivo [LICENSE](LICENSE.md) para más detalles.

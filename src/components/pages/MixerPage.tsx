@@ -23,8 +23,6 @@ export const MixerPage = () => {
     )
   }
 
-  console.log('playPause ', isPaused)
-
   return (
     <MixerLayout
       topBar={
