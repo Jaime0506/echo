@@ -1,14 +1,7 @@
 import { Pause, Play } from "lucide-react";
 import { Button } from "../ui/Button";
 import { ChannelItem } from "../ui/ChannelItem";
-
-export type SoundChannel = {
-  id: string;
-  label: string;
-  icon: "rain" | "cafe" | "noise";
-  value: number;
-  active: boolean;
-};
+import type { SoundChannel } from "../../types/core";
 
 interface MixerCoreProps {
   channels: SoundChannel[];

@@ -26,7 +26,7 @@ Echo se encuentra en desarrollo activo. Actualmente estamos atravesando la etapa
 - 🎨 **Fase 1: Identidad Visual y Bases (Actual)**
   Establecer una interfaz limpia y moderna, estructurar el proyecto y garantizar una experiencia de ventana nativa y fluida tanto en macOS como en Windows.
 - ⚙️ **Fase 2: Motor de Audio Central**
-  Integrar el reproductor de audio mediante el backend en Rust, añadir las pistas ambientales esenciales (Lluvia, Cafetería, Ruido Blanco) y conectar los controles de la interfaz.
+  Integrar el reproductor de audio mediante el backend en Rust, añadir las pistas ambientales esenciales (Lluvia, Viento, Sonidos de la naturaleza) y conectar los controles de la interfaz.
 - ✨ **Fase 3: Pulido y Expansión**
   Añadir soporte para guardar mezclas personalizadas (presets), optimizar el rendimiento y generar los instaladores finales para cada plataforma.
 

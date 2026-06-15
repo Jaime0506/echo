@@ -2,13 +2,13 @@ import React from "react";
 import { Slider } from "./Slider";
 import { Typography } from "./Typography";
 import { Button } from "./Button";
-import { CloudRain, Coffee, AudioLines } from "lucide-react";
+import { CloudRain, Wind } from "lucide-react";
 import { cn } from "../../utils";
 
 interface ChannelItemProps {
   id: string;
   label: string;
-  iconName: "rain" | "cafe" | "noise";
+  iconName: string;
   isActive?: boolean;
   value: number;
   onValueChange: (value: number) => void;
@@ -27,10 +27,8 @@ export const ChannelItem: React.FC<ChannelItemProps> = ({
     switch (iconName) {
       case "rain":
         return <CloudRain size={24} strokeWidth={1.5} />;
-      case "cafe":
-        return <Coffee size={24} strokeWidth={1.5} />;
-      case "noise":
-        return <AudioLines size={24} strokeWidth={1.5} />;
+      case "wind":
+        return <Wind size={24} strokeWidth={1.5} />;
       default:
         return <CloudRain size={24} strokeWidth={1.5} />;
     }
@@ -48,7 +46,7 @@ export const ChannelItem: React.FC<ChannelItemProps> = ({
       >
         {renderIcon()}
       </Button>
-      
+
       <div className="h-40 sm:h-48 flex items-center justify-center w-full py-2">
         <Slider
           orientation="vertical"
@@ -59,7 +57,7 @@ export const ChannelItem: React.FC<ChannelItemProps> = ({
           className="h-full"
         />
       </div>
-      
+
       <Typography
         variant="label"
         color={isActive ? "accent" : "muted"}

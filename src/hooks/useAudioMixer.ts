@@ -1,22 +1,14 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { SoundChannel } from "../components/organisms/MixerCore";
+
 import { store } from "../store/store";
+import type { SoundChannel } from "../types/core";
+import { defaultChannels } from "../utils/channels";
 
 export const useAudioMixer = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const [channels, setChannels] = useState<SoundChannel[]>([
-        { id: "rain", label: "Lluvia", icon: "rain", value: 0, active: false },
-        { id: "cafe", label: "Café", icon: "cafe", value: 0, active: false },
-        {
-            id: "noise",
-            label: "Ruido Blanco",
-            icon: "noise",
-            value: 0,
-            active: false,
-        },
-    ]);
+    const [channels, setChannels] = useState<SoundChannel[]>(defaultChannels);
 
     const [masterVolume, setMasterVolume] = useState(0);
 
@@ -50,7 +42,9 @@ export const useAudioMixer = () => {
             if (isPaused) {
                 setIsPaused(false);
                 store.set("isPaused", false);
-                invoke("set_global_pause", { paused: false }).catch(console.error);
+                invoke("set_global_pause", { paused: false }).catch(
+                    console.error,
+                );
             }
             return;
         }
@@ -64,7 +58,9 @@ export const useAudioMixer = () => {
             if (!isPaused) {
                 setIsPaused(true);
                 store.set("isPaused", true);
-                invoke("set_global_pause", { paused: true }).catch(console.error);
+                invoke("set_global_pause", { paused: true }).catch(
+                    console.error,
+                );
             }
         }
     };
@@ -92,7 +88,9 @@ export const useAudioMixer = () => {
             if (typeof storedIsPaused === "boolean") {
                 initialIsPaused = storedIsPaused;
                 setIsPaused(initialIsPaused);
-                invoke("set_global_pause", { paused: initialIsPaused }).catch(console.error);
+                invoke("set_global_pause", { paused: initialIsPaused }).catch(
+                    console.error,
+                );
             }
 
             if (
@@ -108,21 +106,39 @@ export const useAudioMixer = () => {
             }
 
             if (storedChannels && storedChannels.length > 0) {
-                // Seteamos el estado visual
-                setChannels(storedChannels);
+                // Merge defaultChannels with storedChannels so new channels are kept
+                // and existing ones retain their saved volume/active state
+                const mergedChannels = defaultChannels.map((defaultChannel) => {
+                    const storedChannel = storedChannels.find(
+                        (c) => c.id === defaultChannel.id,
+                    );
+                    if (storedChannel) {
+                        return {
+                            ...defaultChannel,
+                            value: storedChannel.value,
+                            active: storedChannel.active,
+                        };
+                    }
+                    return defaultChannel;
+                });
 
-                const hasActiveChannel = storedChannels.some(
+                // Seteamos el estado visual
+                setChannels(mergedChannels);
+
+                const hasActiveChannel = mergedChannels.some(
                     (channel) => channel.active && channel.value > 0,
                 );
 
                 if (!hasActiveChannel) {
                     setIsPaused(true);
-                    invoke("set_global_pause", { paused: true }).catch(console.error);
+                    invoke("set_global_pause", { paused: true }).catch(
+                        console.error,
+                    );
                     return;
                 }
 
                 // Sincronizamos con el backend de Rust para que efectivamente empiece a sonar la música guardada!
-                storedChannels.forEach((channel) => {
+                mergedChannels.forEach((channel) => {
                     if (channel.active && channel.value > 0) {
                         invoke("set_channel_volume", {
                             id: channel.id,

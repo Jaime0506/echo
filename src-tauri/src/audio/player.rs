@@ -60,18 +60,24 @@ impl AudioState {
                                 }
                             } else {
                                 if let Ok(sink) = Sink::try_new(&stream_handle) {
-                                    if let Ok(file) = File::open(&file_path) {
-                                        if let Ok(source) = Decoder::new(BufReader::new(file)) {
-                                            sink.append(source.repeat_infinite());
-                                            sink.set_volume(volume * master_volume);
-                                            if !global_paused {
-                                                sink.play();
-                                            } else {
-                                                sink.pause();
+                                    match File::open(&file_path) {
+                                        Ok(file) => match Decoder::new(BufReader::new(file)) {
+                                            Ok(source) => {
+                                                sink.append(source.repeat_infinite());
+                                                sink.set_volume(volume * master_volume);
+                                                if !global_paused {
+                                                    sink.play();
+                                                } else {
+                                                    sink.pause();
+                                                }
+                                                sinks.insert(id, (sink, volume));
                                             }
-                                            sinks.insert(id, (sink, volume));
-                                        }
+                                            Err(e) => eprintln!("Failed to decode file {}: {}", file_path, e),
+                                        },
+                                        Err(e) => eprintln!("Failed to open file {}: {}", file_path, e),
                                     }
+                                } else {
+                                    eprintln!("Failed to create sink for {}", id);
                                 }
                             }
                         } else {
@@ -140,6 +146,7 @@ impl AudioState {
     fn get_file_for_id(&self, id: &str) -> String {
         match id {
             "rain" => "resources/212799__ayton__rain-loop-ontario-loop.wav".to_string(),
+            "wind" => "resources/151770__gnrja__storm-winds-loop.wav".to_string(),
             _ => format!("resources/{}.wav", id),
         }
     }
