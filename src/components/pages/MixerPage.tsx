@@ -11,7 +11,10 @@ export const MixerPage = () => {
     masterVolume,
     isLoading: isLoadingAllSettings,
     updateChannelValue,
-    updateMasterVolume
+    updateMasterVolume,
+
+    isPaused,
+    onPressPlayControl,
   } = useAudioMixer();
 
   if (isLoadingAllSettings) {
@@ -19,6 +22,8 @@ export const MixerPage = () => {
       <div className="w-screen h-screen flex items-center justify-center text-4xl dark:text-neutral-300 text-neutral-600">Cargando...</div>
     )
   }
+
+  console.log('playPause ', isPaused)
 
   return (
     <MixerLayout
@@ -38,6 +43,8 @@ export const MixerPage = () => {
               onVolumeChange={updateMasterVolume}
             />
           }
+          isPaused={isPaused}
+          onPressPlayControl={onPressPlayControl}
         />
       }
     />

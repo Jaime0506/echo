@@ -19,3 +19,11 @@ pub async fn set_master_volume(
 ) -> Result<(), String> {
     state.set_master_volume(volume, &app_handle)
 }
+
+#[tauri::command]
+pub async fn set_global_pause(
+    paused: bool,
+    state: State<'_, AudioState>,
+) -> Result<(), String> {
+    state.set_global_pause(paused)
+}

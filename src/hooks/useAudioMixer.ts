@@ -20,26 +20,53 @@ export const useAudioMixer = () => {
 
     const [masterVolume, setMasterVolume] = useState(0);
 
+    const [isPaused, setIsPaused] = useState(false);
+
+    const onPressPlayControl = () => {
+        const nextState = !isPaused;
+        setIsPaused(nextState);
+        store.set("isPaused", nextState);
+        invoke("set_global_pause", { paused: nextState }).catch(console.error);
+    };
+
     const updateChannelValue = (id: string, value: number) => {
-        setChannels((prev) =>
-            prev.map((channel) =>
+        const newValuesChannels: SoundChannel[] = channels.map(
+            (channel: SoundChannel) =>
                 channel.id === id
                     ? { ...channel, value, active: value > 0 }
                     : channel,
-            ),
         );
+
+        setChannels(newValuesChannels);
+
         invoke("set_channel_volume", { id, volume: value / 100.0 }).catch(
             console.error,
         );
 
-        store.set(
-            "channels",
-            channels.map((channel) =>
-                channel.id === id
-                    ? { ...channel, value, active: value > 0 }
-                    : channel,
-            ),
+        store.set("channels", newValuesChannels);
+
+        // Si el nuevo valor es mayor a 0, deberia activarse la reproducción
+        if (value > 0) {
+            if (isPaused) {
+                setIsPaused(false);
+                store.set("isPaused", false);
+                invoke("set_global_pause", { paused: false }).catch(console.error);
+            }
+            return;
+        }
+
+        // Si todos los valores son 0, entonces debe pausarse
+        const hasActiveChannel = newValuesChannels.some(
+            (channel) => channel.active && channel.value > 0,
         );
+
+        if (!hasActiveChannel) {
+            if (!isPaused) {
+                setIsPaused(true);
+                store.set("isPaused", true);
+                invoke("set_global_pause", { paused: true }).catch(console.error);
+            }
+        }
     };
 
     const updateMasterVolume = (value: number) => {
@@ -54,10 +81,19 @@ export const useAudioMixer = () => {
     const handleGetAllSettings = async () => {
         try {
             // Hacemos las peticiones en paralelo para que cargue más rápido
-            const [storedMasterVolume, storedChannels] = await Promise.all([
-                store.get<number>("masterVolume"),
-                store.get<SoundChannel[]>("channels"),
-            ]);
+            const [storedMasterVolume, storedChannels, storedIsPaused] =
+                await Promise.all([
+                    store.get<number>("masterVolume"),
+                    store.get<SoundChannel[]>("channels"),
+                    store.get<boolean>("isPaused"),
+                ]);
+
+            let initialIsPaused = false;
+            if (typeof storedIsPaused === "boolean") {
+                initialIsPaused = storedIsPaused;
+                setIsPaused(initialIsPaused);
+                invoke("set_global_pause", { paused: initialIsPaused }).catch(console.error);
+            }
 
             if (
                 typeof storedMasterVolume === "number" &&
@@ -74,6 +110,17 @@ export const useAudioMixer = () => {
             if (storedChannels && storedChannels.length > 0) {
                 // Seteamos el estado visual
                 setChannels(storedChannels);
+
+                const hasActiveChannel = storedChannels.some(
+                    (channel) => channel.active && channel.value > 0,
+                );
+
+                if (!hasActiveChannel) {
+                    setIsPaused(true);
+                    invoke("set_global_pause", { paused: true }).catch(console.error);
+                    return;
+                }
+
                 // Sincronizamos con el backend de Rust para que efectivamente empiece a sonar la música guardada!
                 storedChannels.forEach((channel) => {
                     if (channel.active && channel.value > 0) {
@@ -101,5 +148,7 @@ export const useAudioMixer = () => {
         isLoading,
         updateChannelValue,
         updateMasterVolume,
+        isPaused,
+        onPressPlayControl,
     };
 };

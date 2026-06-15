@@ -15,6 +15,9 @@ pub enum AudioCommand {
     SetMasterVolume {
         volume: f32,
     },
+    SetGlobalPause {
+        paused: bool,
+    },
 }
 
 pub struct AudioState {
@@ -37,6 +40,7 @@ impl AudioState {
             // Store the sink and its individual channel volume
             let mut sinks: HashMap<String, (Sink, f32)> = HashMap::new();
             let mut master_volume: f32 = 1.0;
+            let mut global_paused: bool = false;
 
             for cmd in rx {
                 match cmd {
@@ -49,8 +53,10 @@ impl AudioState {
                             if let Some((sink, chan_vol)) = sinks.get_mut(&id) {
                                 *chan_vol = volume;
                                 sink.set_volume(volume * master_volume);
-                                if sink.is_paused() {
+                                if !global_paused && sink.is_paused() {
                                     sink.play();
+                                } else if global_paused && !sink.is_paused() {
+                                    sink.pause();
                                 }
                             } else {
                                 if let Ok(sink) = Sink::try_new(&stream_handle) {
@@ -58,7 +64,11 @@ impl AudioState {
                                         if let Ok(source) = Decoder::new(BufReader::new(file)) {
                                             sink.append(source.repeat_infinite());
                                             sink.set_volume(volume * master_volume);
-                                            sink.play();
+                                            if !global_paused {
+                                                sink.play();
+                                            } else {
+                                                sink.pause();
+                                            }
                                             sinks.insert(id, (sink, volume));
                                         }
                                     }
@@ -76,6 +86,18 @@ impl AudioState {
                         // Update all active sinks with the new master volume scaled
                         for (sink, chan_vol) in sinks.values() {
                             sink.set_volume(*chan_vol * master_volume);
+                        }
+                    }
+                    AudioCommand::SetGlobalPause { paused } => {
+                        global_paused = paused;
+                        for (sink, chan_vol) in sinks.values() {
+                            if global_paused {
+                                sink.pause();
+                            } else {
+                                if *chan_vol > 0.0 {
+                                    sink.play();
+                                }
+                            }
                         }
                     }
                 }
@@ -106,6 +128,12 @@ impl AudioState {
     pub fn set_master_volume(&self, volume: f32, _app_handle: &AppHandle) -> Result<(), String> {
         self.tx
             .send(AudioCommand::SetMasterVolume { volume })
+            .map_err(|e| e.to_string())
+    }
+
+    pub fn set_global_pause(&self, paused: bool) -> Result<(), String> {
+        self.tx
+            .send(AudioCommand::SetGlobalPause { paused })
             .map_err(|e| e.to_string())
     }
 
