@@ -1,5 +1,7 @@
+use crate::audio::cache::AudioCache;
 use crate::audio::command::AudioCommand;
 use crate::audio::sink::{AudioSink, RodioSink};
+use rodio::buffer::SamplesBuffer;
 use rodio::{Decoder, OutputStream, Sink, Source};
 use std::collections::HashMap;
 use std::fs::File;
@@ -10,6 +12,7 @@ use tauri::{AppHandle, Manager};
 
 pub struct AudioState {
     pub tx: Sender<AudioCommand>,
+    pub cache: AudioCache,
 }
 
 pub struct AudioEngineState {
@@ -77,12 +80,13 @@ pub fn get_file_for_id(id: &str) -> String {
     match id {
         "rain" => "resources/212799__ayton__rain-loop-ontario-loop.wav".to_string(),
         "wind" => "resources/151770__gnrja__storm-winds-loop.wav".to_string(),
+        "nature" => "resources/634511__resaural__spring-birds-woodpeckers-loop-final.flac".to_string(),
         _ => format!("resources/{}.wav", id),
     }
 }
 
 impl AudioState {
-    pub fn new() -> Result<Self, String> {
+    pub fn with_cache(cache: AudioCache) -> Result<Self, String> {
         let (tx, rx) = channel::<AudioCommand>();
 
         thread::spawn(move || {
@@ -106,9 +110,22 @@ impl AudioState {
                         Sink::try_new(&stream_handle).map_err(|e| e.to_string())?;
                     let file =
                         File::open(file_path).map_err(|e| e.to_string())?;
-                    let source = Decoder::new(BufReader::new(file))
-                        .map_err(|e| e.to_string())?;
-                    sink.append(source.repeat_infinite());
+
+                    if file_path.ends_with(".wav") {
+                        let source = Decoder::new(BufReader::new(file))
+                            .map_err(|e| e.to_string())?;
+                        sink.append(source.repeat_infinite());
+                    } else {
+                        let source = Decoder::new(BufReader::new(file))
+                            .map_err(|e| e.to_string())?;
+                        let channels = source.channels();
+                        let sample_rate = source.sample_rate();
+                        let samples: Vec<f32> = source.convert_samples().collect();
+                        sink.append(
+                            SamplesBuffer::new(channels, sample_rate, samples)
+                                .repeat_infinite(),
+                        );
+                    }
                     Ok(Box::new(RodioSink::new(sink)))
                 };
 
@@ -117,7 +134,11 @@ impl AudioState {
             }
         });
 
-        Ok(Self { tx })
+        Ok(Self { tx, cache })
+    }
+
+    pub fn new() -> Result<Self, String> {
+        Self::with_cache(AudioCache::empty())
     }
 
     pub fn set_volume(
@@ -126,19 +147,23 @@ impl AudioState {
         volume: f32,
         app_handle: &AppHandle,
     ) -> Result<(), String> {
-        let resource_path = app_handle
-            .path()
-            .resource_dir()
-            .map_err(|e| e.to_string())?
-            .join(get_file_for_id(id))
-            .to_string_lossy()
-            .to_string();
+        let file_path = self.cache.resolve(id).unwrap_or_else(|| {
+            let resource_dir = app_handle
+                .path()
+                .resource_dir()
+                .map_err(|e| e.to_string())
+                .unwrap_or_default();
+            resource_dir
+                .join(get_file_for_id(id))
+                .to_string_lossy()
+                .to_string()
+        });
 
         self.tx
             .send(AudioCommand::SetVolume {
                 id: id.to_string(),
                 volume,
-                file_path: resource_path,
+                file_path,
             })
             .map_err(|e| e.to_string())
     }

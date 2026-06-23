@@ -35,4 +35,22 @@ export const defaultChannels: SoundChannel[] = [
             fileName: "151770__gnrja__storm-winds-loop.wav",
         },
     },
+    {
+        id: "nature",
+        label: "Naturaleza",
+        icon: "nature",
+        value: 0,
+        active: false,
+        attribution: {
+            author: "Resaural",
+            authorUrl: "https://freesound.org/people/Resaural/",
+            platform: "Freesound",
+            soundName: "Spring Birds & Woodpeckers (Loop)",
+            license: "Creative Commons 0",
+            licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/",
+            uri: "https://freesound.org/people/Resaural/sounds/634511/",
+            fileName:
+                "634511__resaural__spring-birds-woodpeckers-loop-final.flac",
+        },
+    },
 ];

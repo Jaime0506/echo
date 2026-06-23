@@ -44,6 +44,7 @@ The ambient sounds included in Echo are sourced from [Freesound.org](https://fre
 
 - **[Rain Loop Ontario](https://freesound.org/people/Ayton/sounds/212799/)** by [Ayton](https://freesound.org/people/Ayton/) – Licensed under [Attribution 3.0](http://creativecommons.org/licenses/by/3.0/)
 - **[Storm Winds.aiff](https://freesound.org/people/gnrja/sounds/151770/)** by [gnrja](https://freesound.org/people/gnrja/) – Licensed under [Attribution 4.0](https://creativecommons.org/licenses/by/4.0/)
+- **[Spring Birds & Woodpeckers (Loop)](https://freesound.org/people/Resaural/sounds/634511/)** by [Resaural](https://freesound.org/people/Resaural/) – Licensed under [Creative Commons 0](http://creativecommons.org/publicdomain/zero/1.0/)
 
 ## 📜 License
 

@@ -2,7 +2,7 @@ import React from "react";
 import { Slider } from "./Slider";
 import { Typography } from "./Typography";
 import { Button } from "./Button";
-import { CloudRain, Wind } from "lucide-react";
+import { CloudRain, Trees, Wind } from "lucide-react";
 import { cn } from "../../utils";
 
 interface ChannelItemProps {
@@ -29,6 +29,8 @@ export const ChannelItem: React.FC<ChannelItemProps> = ({
         return <CloudRain size={24} strokeWidth={1.5} />;
       case "wind":
         return <Wind size={24} strokeWidth={1.5} />;
+      case "nature":
+        return <Trees size={24} strokeWidth={1.5} />;
       default:
         return <CloudRain size={24} strokeWidth={1.5} />;
     }

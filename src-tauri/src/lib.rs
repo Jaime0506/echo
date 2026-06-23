@@ -1,6 +1,7 @@
 pub mod audio;
 mod commands;
 
+use std::path::PathBuf;
 use tauri::Manager;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -9,13 +10,25 @@ fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
+fn audio_cache_dir(app: &tauri::AppHandle) -> PathBuf {
+    app.path()
+        .app_cache_dir()
+        .unwrap_or_else(|_| PathBuf::from("."))
+        .join("audio")
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::new().build())
         .setup(|app| {
-            // Initialize audio state
-            if let Ok(audio_state) = audio::player::AudioState::new() {
+            let resource_dir = app.path().resource_dir().unwrap_or_else(|_| PathBuf::from("."));
+            let cache_dir = audio_cache_dir(app.handle());
+
+            let cache = audio::cache::AudioCache::new(&resource_dir, &cache_dir);
+
+            // Initialize audio state with cache
+            if let Ok(audio_state) = audio::player::AudioState::with_cache(cache) {
                 app.manage(audio_state);
             } else {
                 eprintln!("Failed to initialize audio state");
