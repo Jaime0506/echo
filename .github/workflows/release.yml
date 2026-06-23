@@ -55,24 +55,14 @@ jobs:
         if: runner.os == 'Windows'
         run: choco install llvm -y
 
-      - name: Generate release notes
-        run: |
-          PREV_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-          if [ -z "$PREV_TAG" ]; then
-            echo "## What's Changed\n\nInitial release." > release-notes.md
-          else
-            printf "## What's Changed\n\n" > release-notes.md
-            git log "$PREV_TAG"..HEAD --pretty=format:"* %s" >> release-notes.md
-          fi
-
       - name: Build and Publish
-        uses: tauri-apps/tauri-action@v2
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: v__VERSION__
           releaseName: "Echo v__VERSION__"
-          releaseBodyFile: release-notes.md
           releaseDraft: false
           prerelease: false
+          generateReleaseNotes: true
           args: ${{ matrix.args }}
